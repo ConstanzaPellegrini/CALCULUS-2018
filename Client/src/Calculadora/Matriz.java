@@ -17,6 +17,8 @@ public class Matriz {
         }
         else
             throw new Error006("Matriz de dimensiones inexistentes.");
+        
+        assert this.verificarInvariante();
     }
     
     public Matriz(String nombre, String descripcion, int cantFila, int cantColumna) throws Error006 {
@@ -30,37 +32,61 @@ public class Matriz {
         }
         else
             throw new Error006("Matriz de dimensiones inexistentes.");
+        
+        assert this.verificarInvariante();
     }        
     
     public double[][] getMatriz() {
+        assert this.verificarInvariante(): "No existe Matriz.";
         return matriz;
     }
 
     public int getCantFila() {
+        assert this.verificarInvariante(): "No existe Matriz.";
         return cantFila;
     }
 
     public int getCantColumna() {
+        assert this.verificarInvariante(): "No existe Matriz.";
         return cantColumna;
     }
 
     public String getNombre() {
+        assert this.verificarInvariante(): "No existe Matriz.";
         return nombre;
     }
 
     public String getDescripcion() {
+        assert this.verificarInvariante(): "No existe Matriz.";
         return descripcion;
     }
 
     public void addElemento(double elemento, int i, int j) throws Error006 {
+        
+        assert i > 0: "Valor fila negativa";
+        assert j > 0: "Valor columna negativa";
+        assert j < this.cantColumna: "Valor columna no existente";
+        assert i < this.cantFila: "Valor fila no existente";
+        assert this.verificarInvariante(): "No existe Matriz.";
+
         if (i >= this.cantFila || j >= this.cantColumna)
             throw new Error006("No existe elemento de la matriz.");
         else
             this.matriz[i][j] = elemento;
+        
+                
     }
-    
+        
     public double getElemento(int i, int j) throws Error006 {
+        
         double result;
+        
+        assert i > 0: "Valor fila negativa";
+        assert j > 0: "Valor columna negativa";
+        assert j < this.cantColumna: "Valor columna no existente";
+        assert i < this.cantFila: "Valor fila no existente";
+        assert this.verificarInvariante(): "No existe Matriz.";
+        
         if (i >= this.cantFila || j >= this.cantColumna)
             throw new Error006("No existe elemento de la matriz.");
         else
@@ -69,21 +95,34 @@ public class Matriz {
     }
 
     public void setNombre(String nombre) {
+        
+        assert this.verificarInvariante(): "No existe Matriz.";
         this.nombre = nombre;
     }
 
     public void setDescripcion(String descripcion) {
+        
+        assert this.verificarInvariante(): "No existe Matriz.";
         this.descripcion = descripcion;
     }
 
     public boolean esCuadrada(){
+        
+        assert this.verificarInvariante(): "No existe Matriz.";
         return (this.cantFila == this.cantColumna);
     }
 
     public static Matriz getSubMatriz(double[][] matriz, int filas, int columnas, int columna) throws Error006 {
+
+            assert columnas >1;
+            assert filas >1;
+            
             Matriz subMatriz = new Matriz(filas-1,columnas-1);
             double[][] m = subMatriz.getMatriz(); 
             int contador=0;
+            
+            assert subMatriz.verificarInvariante();
+
             for (int j=0;j<columnas;j++)
             {
                     if (j==columna) continue;
@@ -107,6 +146,7 @@ public class Matriz {
                     int columnas = this.cantColumna;
                     double determinante = 0.0;
                     
+                    assert this.verificarInvariante(): "No existe Matriz.";                    
                     if (matriz != null && this.esCuadrada()){
                         // Si la matriz es 1x1, el determinante es el elemento de la matriz
                         if ((filas==1) && (columnas==1))
@@ -129,7 +169,9 @@ public class Matriz {
             }
     
     public Matriz traspuesta() throws Error006 {
+        
         Matriz nueva = new Matriz(this.cantFila, this.cantColumna);
+        
         for (int i = 0; i < this.cantFila; i++)
             for (int j = 0; j < this.cantColumna; j++)
                 nueva.addElemento(this.getElemento(i, j), j, i);
@@ -201,6 +243,10 @@ public class Matriz {
             resultado += this.matriz[i][this.cantColumna - 1] + "\n";
         }
         return resultado;
+    }
+    
+    public boolean verificarInvariante(){
+        return (this.matriz != null && this.cantColumna > 0 && this.cantFila > 0);
     }
     
 }
